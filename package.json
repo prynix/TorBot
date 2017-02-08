@@ -1,15 +1,15 @@
 {
-    "name": "proxytest",
+    "name": "PHANTOMJS_TOR_PROXY",
     "version": "0.0.1",
     "private": true,
-    "description": "MFA-proxytest",
+    "description": "MFA PHANTOMJS_TOR_PROXY",
     "main": "none",
     "dependencies": {
         "tor-request": "1.0.6"    
     },
     "devDependencies": {},
     "scripts": {
-        "start": "node tor.js"
+        "start": "node proxy.js"
     },
     "author": "Roman Lezhnin",
     "license": ""
