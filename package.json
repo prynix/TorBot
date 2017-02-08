@@ -1,0 +1,16 @@
+{
+    "name": "proxytest",
+    "version": "0.0.1",
+    "private": true,
+    "description": "MFA-proxytest",
+    "main": "none",
+    "dependencies": {
+        "tor-request": "1.0.6"    
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node tor.js"
+    },
+    "author": "Roman Lezhnin",
+    "license": ""
+}
