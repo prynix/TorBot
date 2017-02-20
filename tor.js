@@ -7,27 +7,26 @@ TOR.TorControlPort.password = 'mypassword';
 module.exports = function (uri, options, origin_res) {
     TOR.renewTorSession(function (err, msg) {
         if (msg) {
-            //                   
-            TOR.torRequest(uri/*,options*/).pipe(origin_res);
-            /*TOR.torRequest(
-                uri,
-                options,
-                function (err, res, body) {
-                    if (!err && res.statusCode == 200) {
-                        //
-                        // 
-                        //               
-                        origin_res.end(body);                
-                        //
-                        //
-                        //
-                    } else {
-                        console.log("ERROR torRequest: ", err);
-                    }
-                });*/
-            //
+            //           
+            origin_res.writeHead(200, {
+                'Content-Type': 'text/html',
+                'Date': 'Sun, 19 Feb 2017 08:13: 53 GMT',
+                'Last-Modified': new Date(),
+                'Server': 'nginx',
+                'Transfer-Encoding': 'chunked',
+                'X-Frame-Options': 'SAMEORIGIN',
+                'X-XSS-Protection': '1; mode=block'
+            });
+            //origin_res.setHeader('Content-Type', 'text/plain');
+            //origin_res.setHeader('Transfer-Encoding', 'chunked');
+            //           
+            TOR.torRequest(uri, options).pipe(origin_res).on('error', function (err) {
+                console.log(' TOR.torRequest ERROR:', err);
+            });
+            //  
         } else {
             console.log("ERROR renewTorSession: ", err);
+            return;
         }
-    });
+    })
 };
