@@ -25,7 +25,7 @@ module.exports = function (uri, options, origin_res) {
                         //'X-XSS-Protection': '1; mode=block'
                     });
                     //
-                    console.log("ORIGIN RESPONSE", body);
+                    console.log("ORIGIN RESPONSE", body.length);
                     //res.pipe(origin_res)
                     origin_res.write(body);
                     origin_res.end();
