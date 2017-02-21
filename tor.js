@@ -7,21 +7,29 @@ TOR.TorControlPort.password = 'mypassword';
 module.exports = function (uri, options, origin_res) {
     TOR.renewTorSession(function (err, msg) {
         if (msg) {
+            //    
+            //origin_res.setHeader('Set-Cookie', ['type=ninja', 'language=javascript']);
             //           
-            origin_res.writeHead(200, {
-                'Content-Type': 'text/html',
-                'Date': 'Sun, 19 Feb 2017 08:13: 53 GMT',
-                'Last-Modified': new Date(),
-                'Server': 'nginx',
-                'Transfer-Encoding': 'chunked',
-                'X-Frame-Options': 'SAMEORIGIN',
-                'X-XSS-Protection': '1; mode=block'
-            });
-            //origin_res.setHeader('Content-Type', 'text/plain');
-            //origin_res.setHeader('Transfer-Encoding', 'chunked');
-            //           
-            TOR.torRequest(uri, options).pipe(origin_res).on('error', function (err) {
-                console.log(' TOR.torRequest ERROR:', err);
+            TOR.torRequest(uri, options, function (err, res, body) {
+                if (!err && res.statusCode == 200) {
+                    //
+                    origin_res.writeHead(200, {
+                        'Connection': 'Keep-Alive;charset=utf-8',
+                        'Content-Type': 'text/HTML',
+                        'Content-Language': 'en-US',
+                        //'Date': 'Sun, 19 Feb 2017 08:13: 53 GMT',
+                        //'Last-Modified': new Date(),
+                        //'Server': 'nginx',
+                        'Transfer-Encoding': 'chunked',
+                        //'X-Frame-Options': 'SAMEORIGIN',
+                        //'X-XSS-Protection': '1; mode=block'
+                    });
+                    //
+                    console.log("ORIGIN RESPONSE", body);
+                    //res.pipe(origin_res)
+                    origin_res.write(body);
+                    origin_res.end();
+                }
             });
             //  
         } else {
@@ -30,3 +38,5 @@ module.exports = function (uri, options, origin_res) {
         }
     })
 };
+
+
