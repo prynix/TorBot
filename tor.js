@@ -6,7 +6,7 @@ http://en.engdraft.com/implement-nodejs-with-tor-to-change-ip-address/
 */
 let counter = 0
 const TOR = require('tor-request')
-    , mime_picture = 'image/jpeg'
+    , mime_picture = 'image/'
     , mime_css = 'text/css'
     , mime_js = 'text/javascript'
     , mime_html = 'text/html';
@@ -28,7 +28,7 @@ module.exports = function (origin_req, options, origin_res) {
                     //
                     //
                     if (origin_req.url.lastIndexOf('.css') !== -1) {
-                        console.log(`proxyReqHandler CSS  ${origin_req.url}`);
+                        console.log(`proxyReqHandler CSS  ${origin_req.url}  mime  ${mime_css}`);
                         origin_res.writeHead(200, {
                             'Connection': 'Keep-Alive;charset=utf-8',
                             'Content-Type': mime_css,
@@ -41,7 +41,7 @@ module.exports = function (origin_req, options, origin_res) {
                             //'X-XSS-Protection': '1; mode=block'
                         });
                     } else if (origin_req.url.lastIndexOf('.js') !== -1) {
-                        console.log(`proxyReqHandler JS  ${origin_req.url}`);
+                        console.log(`proxyReqHandler JS  ${origin_req.url} mime  ${mime_js}`);
                         origin_res.writeHead(200, {
                             'Connection': 'Keep-Alive;charset=utf-8',
                             'Content-Type': mime_js,
@@ -53,11 +53,13 @@ module.exports = function (origin_req, options, origin_res) {
                             //'X-Frame-Options': 'SAMEORIGIN',
                             //'X-XSS-Protection': '1; mode=block'
                         });
-                    } else if (/.jpg|.png/.exec(origin_req.url)) {
-                        console.log(`proxyReqHandler PICTURE  ${origin_req.url}`);
+                    } else if (/.jpg|.png|.gif/.exec(origin_req.url)) {
+                        let pictureMimeKind = origin_req.url.substring(origin_req.url.lastIndexOf('.') + 1);
+                        if (pictureMimeKind == 'jpg') pictureMimeKind = 'jpeg';
+                        console.log(`proxyReqHandler PICTURE  ${origin_req.url}  mime:   ${mime_picture + pictureMimeKind}`);
                         origin_res.writeHead(200, {
                             'Connection': 'Keep-Alive;charset=utf-8',
-                            'Content-Type': mime_picture,
+                            'Content-Type': mime_picture + pictureMimeKind,
                             'Content-Language': 'en-US',
                             //'Date': 'Sun, 19 Feb 2017 08:13: 53 GMT',
                             //'Last-Modified': new Date(),
@@ -67,7 +69,7 @@ module.exports = function (origin_req, options, origin_res) {
                             //'X-XSS-Protection': '1; mode=block'
                         });
                     } else {
-                        console.log(`proxyReqHandler HTML  ${origin_req.url}`);
+                        console.log(`proxyReqHandler HTML  ${origin_req.url}  mime  ${mime_html}`);
                         origin_res.writeHead(200, {
                             'Connection': 'Keep-Alive;charset=utf-8',
                             'Content-Type': mime_html,
@@ -85,11 +87,14 @@ module.exports = function (origin_req, options, origin_res) {
                     //
                     origin_res.write(body);
                     origin_res.end();
+                    counter++
+                    console.log(`()=>   Сервер ответил на  <<${counter}>>  запросов!`);
                     //
                     //
                     //
                 } else {
                     console.log('TOR.torRequest ON.ERROR-0: ', error);
+                    origin_res.end();
                 }
             });
         } else {
