@@ -53,7 +53,7 @@ module.exports = function (origin_req, options, origin_res) {
                             //'X-Frame-Options': 'SAMEORIGIN',
                             //'X-XSS-Protection': '1; mode=block'
                         });
-                    } else if (/.jpg|.png|.gif/.exec(origin_req.url)) {
+                    } else if (/.jpg|.png|.gif|.svg/.exec(origin_req.url)) {
                         let pictureMimeKind = origin_req.url.substring(origin_req.url.lastIndexOf('.') + 1);
                         if (pictureMimeKind == 'jpg') pictureMimeKind = 'jpeg';
                         console.log(`proxyReqHandler PICTURE  ${origin_req.url}  mime:   ${mime_picture + pictureMimeKind}`);
@@ -93,7 +93,7 @@ module.exports = function (origin_req, options, origin_res) {
                     //
                     //
                 } else {
-                    console.log('TOR.torRequest ON.ERROR-0: ', error);
+                    console.log('TOR.torRequest ON.ERROR: ', error);
                     origin_res.end();
                 }
             });

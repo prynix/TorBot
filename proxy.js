@@ -1,4 +1,7 @@
 var http = require('http')
+  , https = require('https')
+  , fs = require('fs')
+
   , torReq = require('./tor')
   , S = require('./settings.json')
   , REF = require('./referer.js')
@@ -21,27 +24,48 @@ var http = require('http')
     'X-Forwarded-For': startRandomRefererWashingPoint,
     "User-Agent": generateNewUserAgent()
   }
-
-var SERVER = http.createServer(onRequest).listen(3000, function () {
+  , httpsServerSettings = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+  };
+//
+// HTTP -- PROXY:
+//
+/*
+var SERVER_http = http.createServer(onRequest).listen(5001, function () {
   console.info('===-PHANTOMJS__TOR__PROXY-===');
 });
-
-function onRequest(client_req, client_res) {
-}
-
-SERVER.on('request', function (request, response) {
-  var options = {
+SERVER_http.on('request', function (request, response) {
+  console.log(`SERVER_http.on('request', function (request, response)`)
+  let options = {
     headers: PRETENDER_headers,
     method: request.method
   };
   torReq(request, options, response);
 });
+*/
+//
+// HTTPS -- PROXY:
+//
+var SERVER_httpS = https.createServer(httpsServerSettings, onRequest).listen(3000, function () {
+  console.info('===-CasperJS__HTTPS-----TOR__PROXY-===');
+});
 
-
-
+SERVER_httpS.on('request', function (request, response) {
+  console.log(`SERVER_httpS.on('request', function (request, response)`);
+  let options = {
+    headers: PRETENDER_headers,
+    method: request.method
+  };
+  torReq(request, options, response);
+});
+//
+//
+//
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 function generateNewUserAgent() {
   return UA_storage[getRandomInt(0, UA_storage.length - 1)];
 }
+function onRequest(client_req, client_res) { }
