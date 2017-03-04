@@ -22,18 +22,20 @@ var http = require('http')
     "User-Agent": generateNewUserAgent()
   }
 
-http.createServer(onRequest).listen(3000, function () {
+var SERVER = http.createServer(onRequest).listen(3000, function () {
   console.info('===-PHANTOMJS__TOR__PROXY-===');
 });
 
 function onRequest(client_req, client_res) {
-  var options = {
-    headers: PRETENDER_headers,
-    method: client_req.method
-  };
-  torReq(client_req.url, options, client_res)
 }
 
+SERVER.on('request', function (request, response) {
+  var options = {
+    headers: PRETENDER_headers,
+    method: request.method
+  };
+  torReq(request, options, response);
+});
 
 
 
