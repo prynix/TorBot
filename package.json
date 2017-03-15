@@ -1,8 +1,8 @@
 {
-    "name": "PHANTOMJS_TOR_PROXY",
-    "version": "0.0.1",
+    "name": "ipTwister",
+    "version": "1.0.5",
     "private": true,
-    "description": "MFA PHANTOMJS_TOR_PROXY",
+    "description": "Proxy - server. Every request ip changer throw  <TOR>  in node.js",
     "main": "none",
     "dependencies": {
         "tor-request": "1.0.6"    
@@ -11,6 +11,6 @@
     "scripts": {
         "start": "node proxy.js"
     },
-    "author": "Roman Lezhnin",
+    "author": "botFarmer",
     "license": ""
 }
